@@ -40,8 +40,10 @@ Donation in crypto
 - Organization's Dashboard with all the causes
 
 # Concerns
+- Very few and simple onchain transactions(chain write operations)
+- Circuit Breaker design pattern doesnt ever have applicability in this
+- Very less code to demostrate security and design pattern skills
 - Authenticity of Cause Creator?
-- 
 
 # Flow
 - Landing Page
