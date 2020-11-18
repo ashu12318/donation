@@ -7,53 +7,55 @@ Donation in crypto
 
 # Feature
 - Create a Cause w/
+-- Header
+-- Description(Potentialy an offchain link)
 -- Target Amount
+-- Accumulated Fund
 -- Deadline
 -- Start Date
 -- Owner/Creator
--- Description(Potentialy an offchain link)
 
 - Accept Ether
 
-- Withdraw Donation
+- Donate
+-- Circuit Breaker: Disable Contract after timeline is over
+
+- Withdraw Donation: Withdrawal Pattern
 -- Once timeline is finished
+-- Creator of the Contract
+-- Circuit Breaker: Close the contract after there is no fund...
 
 - Fetch List of all active/future causes
+- Fetch all Cause by creator's address
 
 # Transactions
-- Create a Cause
-- Donate
+- Create a Cause: Creator/Owner
+- Donate: Users
+- Withdraw: Creator/Owner
 # Read Operations
-- Fetch all Causes/Donations
-- Fetch Single Cause
-- 
+- Fetch all Causes/Donations: Users
+- Fetch Single Cause: Users
 
 # Future Goals
-- Accept Donation in Any Token
+- Contract for each Cause
+-- Factory Pattern
+---- Use it for creating a new contract for every cause 
+---- Act as Registry(To provide address of all the causes)
+---- How this factory will know that specific cause has been closed: Not required
 
+- Accept Donation in Any Token: Uniswap/Metamask Integration
 - Auto Swap to a Target stable coin
 -- Add target Stable Coin token while creating Cause
 
-- Contract for each Cause
--- Will it have any real benifit?
-
 - Organization's Dashboard with all the causes
 
-# Concerns
-- Very few and simple onchain transactions(chain write operations)
-- Circuit Breaker design pattern doesnt ever have applicability in this
-- Very less code to demostrate security and design pattern skills
-- Authenticity of Cause Creator?
-
 # Flow
+- Cause Details/Doation Page
 - Landing Page
 - Create Cause Page
 - Browser All Cause Page
-- Cause Details/Doation Page
 
 # TODO
-- Any 2 General Design Pattern
--- Circuit Breaker
 - Any library use?
 - Security Risk Handled
 - Include SafeMath
@@ -62,4 +64,6 @@ Donation in crypto
 
 # Bonus
 - Ugradability
-- 
+
+# Concerns
+- Authenticity of Cause Creator?
