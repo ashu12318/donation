@@ -62,6 +62,10 @@ Donation in crypto
 - Testing
 -- Inculed Openzappline Test Helper
 
+# TODO: Non-Functional
+- Deploy to testnet
+- 
+
 # Bonus
 - Ugradability
 

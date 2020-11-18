@@ -6,6 +6,7 @@ import "../contracts/SimpleStorage.sol";
 
 contract TestSimpleStorage {
 
+/*
   function testItStoresAValue() public {
     SimpleStorage simpleStorage = SimpleStorage(DeployedAddresses.SimpleStorage());
 
@@ -15,5 +16,6 @@ contract TestSimpleStorage {
 
     Assert.equal(simpleStorage.get(), expected, "It should store the value 89.");
   }
+*/
 
 }
