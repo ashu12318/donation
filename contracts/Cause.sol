@@ -102,23 +102,22 @@ contract Cause {
         external
         payable 
         isAcceptingDonation {
-        //TODO: Do we need payable fallback function here? 
         emit DonationDone(address(this), msg.sender, msg.value, address(this).balance);
     }
 
+    /// @notice Allows owner of the Cause to withdraw fund once the Cause timeline for donation is over
+    /// @dev After this operation Contract instance is of no use
     function Withdraw() 
         external
         onlyOwner
         canWithdrawFunds
     {
         //Design: Instead of using send or transfer, used call: https://consensys.github.io/smart-contract-best-practices/recommendations/#dont-use-transfer-or-send
-        uint amountToWithdraw = address(this).balance; 
-        (bool success, ) = Owner.call.value(amountToWithdraw)("");
-        if(success) {
-            WithdrawalDone = true;
-            emit Withdrawal(address(this), Owner, amountToWithdraw);
-        }
+        uint amountToWithdraw = address(this).balance;
+        WithdrawalDone = true; //Design: Reenterancy Attack avoided by updating the state variable
+        (bool success, ) = Owner.call.value(amountToWithdraw)(""); //Design: Handling error of external call
+        require(success);
+        emit Withdrawal(address(this), Owner, amountToWithdraw);
     }
     //TODO: Put a fallback function to revert accidentally sent ethers
-    //TODO: Create Factory, Registry
 }
