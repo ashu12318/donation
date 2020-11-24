@@ -18,12 +18,12 @@ Donation in crypto
 - Accept Ether
 
 - Donate
--- Circuit Breaker: Disable Contract after timeline is over
+-- Auto Deprication: Based on timeline and Target Amount
 
 - Withdraw Donation: Withdrawal Pattern
 -- Once timeline is finished
 -- Creator of the Contract
--- Circuit Breaker: Close the contract after there is no fund...
+-- Auto Deprication: Close the contract after there is no fund...
 
 - Fetch List of all active/future causes
 - Fetch all Cause by creator's address
@@ -41,7 +41,7 @@ Donation in crypto
 -- Factory Pattern
 ---- Use it for creating a new contract for every cause 
 ---- Act as Registry(To provide address of all the causes)
----- How this factory will know that specific cause has been closed: Not required
+---- Circuit Breaker: Disable Contract after timeline is over
 
 - Accept Donation in Any Token: Uniswap/Metamask Integration
 - Auto Swap to a Target stable coin
