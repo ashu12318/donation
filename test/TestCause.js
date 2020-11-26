@@ -4,6 +4,7 @@ const MockCause = artifacts.require("MockCause");
 let catchRevert = require("./exceptionHelper.js").catchRevert
 
 contract("Cause", accounts => {
+    let deployerAccount = accounts[3];
     let ownerAccount = accounts[0];
     let donerAccount1 = accounts[1];
     let account3 = accounts[2];
@@ -17,7 +18,7 @@ contract("Cause", accounts => {
         let endTime = Math.floor(Date.now() / 1000) + 2000;
 
         //Act
-        let causeInstance = await Cause.new(title, detail, targetAmount, startTime, endTime);
+        let causeInstance = await Cause.new(title, detail, targetAmount, startTime, endTime, ownerAccount, { from: deployerAccount });
 
         //Assert
         let actualTitle = await causeInstance.Title.call();
@@ -25,12 +26,16 @@ contract("Cause", accounts => {
         let actualTargetAmount = await causeInstance.TargetAmount.call();
         let actualStartTime = await causeInstance.StartTime.call();
         let actualEndTime = await causeInstance.EndTime.call();
+        let actualOwner = await causeInstance.Owner.call();
+        let actualCreator = await causeInstance.Creator.call();
 
         assert.equal(actualTitle, title, "Title do not match.");
         assert.equal(actualDetail, detail, "Details do not match.");
         assert(actualTargetAmount.eq(new BN(targetAmount)), "Target Amount do not match.");
         assert(actualStartTime.eq(new BN(startTime)), "Start Time do not match."); 
         assert(actualEndTime.eq(new BN(endTime)), "End Time do not match.");
+        assert.equal(actualOwner, ownerAccount, "Owner do not match.");
+        assert.equal(actualCreator, deployerAccount, "Creator do not match.");
     });
 
     it("Constructor Initialization should fail: Title length should be less than 20 characters", async () => {
@@ -42,7 +47,7 @@ contract("Cause", accounts => {
         let targetAmount = 100;
 
         //Act
-        let createInstancePromise = Cause.new(title, detail, targetAmount, startTime, endTime);
+        let createInstancePromise = Cause.new(title, detail, targetAmount, startTime, endTime, ownerAccount, { from: deployerAccount });
 
         //Assert
         await catchRevert(createInstancePromise, "Please provide a short title which is under 20 character.");
@@ -57,7 +62,7 @@ contract("Cause", accounts => {
         let targetAmount = 100;
 
         //Act
-        let createInstancePromise = Cause.new(title, detail, targetAmount, startTime, endTime);
+        let createInstancePromise = Cause.new(title, detail, targetAmount, startTime, endTime, ownerAccount, { from: deployerAccount });
 
         //Assert
         await catchRevert(createInstancePromise, "Please provide a short detail which is under 100 character.");
@@ -72,7 +77,7 @@ contract("Cause", accounts => {
         let targetAmount = 0;
 
         //Act
-        let createInstancePromise = Cause.new(title, detail, targetAmount, startTime, endTime);
+        let createInstancePromise = Cause.new(title, detail, targetAmount, startTime, endTime, ownerAccount, { from: deployerAccount });
 
         //Assert
         await catchRevert(createInstancePromise, "Please provide a valid amount for Target Amount.");
@@ -87,7 +92,7 @@ contract("Cause", accounts => {
         let targetAmount = 100;
 
         //Act
-        let createInstancePromise = Cause.new(title, detail, targetAmount, startTime, endTime);
+        let createInstancePromise = Cause.new(title, detail, targetAmount, startTime, endTime, ownerAccount, { from: deployerAccount });
 
         //Assert
         await catchRevert(createInstancePromise, "Start time should be a future time.");
@@ -102,7 +107,7 @@ contract("Cause", accounts => {
         let targetAmount = 100;
 
         //Act
-        let createInstancePromise = Cause.new(title, detail, targetAmount, startTime, endTime);
+        let createInstancePromise = Cause.new(title, detail, targetAmount, startTime, endTime, ownerAccount, { from: deployerAccount });
 
         //Assert
         await catchRevert(createInstancePromise, "End time should be in future compared to Start time.");
@@ -119,7 +124,7 @@ contract("Cause", accounts => {
         let startTime = Math.floor(Date.now() / 1000) + secondsToAdd;
         let endTime = Math.floor(Date.now() / 1000) + 2000;
         var donationAmount = 500;
-        let mockCauseInstance = await MockCause.new(title, detail, targetAmount, startTime, endTime);
+        let mockCauseInstance = await MockCause.new(title, detail, targetAmount, startTime, endTime, ownerAccount, { from: deployerAccount });
 
         //Act
         await mockCauseInstance.shiftTime(secondsToAdd + 10);
@@ -140,7 +145,7 @@ contract("Cause", accounts => {
         let startTime = Math.floor(Date.now() / 1000) + secondsToAdd;
         let endTime = Math.floor(Date.now() / 1000) + 2000;
         var donationAmount = 500;
-        let mockCauseInstance = await MockCause.new(title, detail, targetAmount, startTime, endTime);
+        let mockCauseInstance = await MockCause.new(title, detail, targetAmount, startTime, endTime, ownerAccount, { from: deployerAccount });
         let initialBalance = await web3.eth.getBalance(mockCauseInstance.address);
 
         //Act
@@ -162,7 +167,7 @@ contract("Cause", accounts => {
         let startTime = Math.floor(Date.now() / 1000) + secondsToAdd;
         let endTime = Math.floor(Date.now() / 1000) + 2000;
         var donationAmount = 1000;
-        let mockCauseInstance = await MockCause.new(title, detail, targetAmount, startTime, endTime);
+        let mockCauseInstance = await MockCause.new(title, detail, targetAmount, startTime, endTime, ownerAccount, { from: deployerAccount });
 
         //Act
         let donatePromise = mockCauseInstance.Donate({ from: donerAccount1, value: donationAmount });
@@ -180,7 +185,7 @@ contract("Cause", accounts => {
         let startTime = Math.floor(Date.now() / 1000) + 100;
         let endTime = Math.floor(Date.now() / 1000) + secondsToAdd;
         let donationAmount = 1000;
-        let mockCauseInstance = await MockCause.new(title, detail, targetAmount, startTime, endTime);
+        let mockCauseInstance = await MockCause.new(title, detail, targetAmount, startTime, endTime, ownerAccount, { from: deployerAccount });
 
         //Act
         await mockCauseInstance.shiftTime(secondsToAdd + 10);
@@ -199,7 +204,7 @@ contract("Cause", accounts => {
         let startTime = Math.floor(Date.now() / 1000) + secondsToAdd;
         let endTime = Math.floor(Date.now() / 1000) + 2000;
         let donationAmount = 100;
-        let mockCauseInstance = await MockCause.new(title, detail, targetAmount, startTime, endTime);
+        let mockCauseInstance = await MockCause.new(title, detail, targetAmount, startTime, endTime, ownerAccount, { from: deployerAccount });
 
         //Act
         await mockCauseInstance.shiftTime(secondsToAdd + 10);
@@ -220,7 +225,7 @@ contract("Cause", accounts => {
         let startTime = Math.floor(Date.now() / 1000) + secondsToAdd;
         let endTime = Math.floor(Date.now() / 1000) + secondsToAddEndTime;
         let donationAmount = 100;
-        let mockCauseInstance = await MockCause.new(title, detail, targetAmount, startTime, endTime);
+        let mockCauseInstance = await MockCause.new(title, detail, targetAmount, startTime, endTime, ownerAccount, { from: deployerAccount });
         let gasPrice = 50;
 
         await mockCauseInstance.shiftTime(secondsToAdd + 10);
@@ -232,7 +237,7 @@ contract("Cause", accounts => {
         let initialBalanceOfOwner = new BN(await web3.eth.getBalance(await mockCauseInstance.Owner.call()));
 
         //Act
-        let withdrawResult = await mockCauseInstance.Withdraw({gasPrice: gasPrice});
+        let withdrawResult = await mockCauseInstance.Withdraw({from: ownerAccount, gasPrice: gasPrice});
         let gasCost = new BN(withdrawResult.receipt.gasUsed * gasPrice);
         let finalBalanceOfOwner = new BN(await web3.eth.getBalance(await mockCauseInstance.Owner.call()));
         let expectedfinalBalanceOfOwner = initialBalanceOfOwner.add(contractBalanceAfterDonation).sub(gasCost);
@@ -251,7 +256,7 @@ contract("Cause", accounts => {
         let startTime = Math.floor(Date.now() / 1000) + secondsToAdd;
         let endTime = Math.floor(Date.now() / 1000) + secondsToAddEndTime;
         let donationAmount = 100;
-        let mockCauseInstance = await MockCause.new(title, detail, targetAmount, startTime, endTime);
+        let mockCauseInstance = await MockCause.new(title, detail, targetAmount, startTime, endTime, ownerAccount, { from: deployerAccount });
 
         await mockCauseInstance.shiftTime(secondsToAdd + 10);
 
@@ -260,7 +265,7 @@ contract("Cause", accounts => {
         
         await mockCauseInstance.shiftTime(secondsToAddEndTime + 10);
         //Act
-        let withdrawResult = await mockCauseInstance.Withdraw();
+        let withdrawResult = await mockCauseInstance.Withdraw({from: ownerAccount});
 
         //Assert
         assert.equal(withdrawResult.logs.length, 1, "Withdrawal failed. Only one event is expected.");
@@ -280,7 +285,7 @@ contract("Cause", accounts => {
         let startTime = Math.floor(Date.now() / 1000) + secondsToAdd;
         let endTime = Math.floor(Date.now() / 1000) + secondsToAddEndTime;
         let donationAmount = 100;
-        let mockCauseInstance = await MockCause.new(title, detail, targetAmount, startTime, endTime);
+        let mockCauseInstance = await MockCause.new(title, detail, targetAmount, startTime, endTime, ownerAccount, { from: deployerAccount });
 
         await mockCauseInstance.shiftTime(secondsToAdd + 10);
         await mockCauseInstance.Donate({from : donerAccount1, value: donationAmount});
@@ -303,13 +308,13 @@ contract("Cause", accounts => {
         let startTime = Math.floor(Date.now() / 1000) + secondsToAdd;
         let endTime = Math.floor(Date.now() / 1000) + secondsToAddEndTime;
         let donationAmount = 100;
-        let mockCauseInstance = await MockCause.new(title, detail, targetAmount, startTime, endTime);
+        let mockCauseInstance = await MockCause.new(title, detail, targetAmount, startTime, endTime, ownerAccount, { from: deployerAccount });
         
         await mockCauseInstance.shiftTime(secondsToAdd + 10);
         await mockCauseInstance.Donate({from : donerAccount1, value: donationAmount});
 
         //Act
-        let withdrawPromise = mockCauseInstance.Withdraw();
+        let withdrawPromise = mockCauseInstance.Withdraw({ from: ownerAccount });
         
         //Assert
         await catchRevert(withdrawPromise, "Withdraw operation not allowed. Cause is still active and accepting donations.");
@@ -325,15 +330,15 @@ contract("Cause", accounts => {
         let startTime = Math.floor(Date.now() / 1000) + secondsToAdd;
         let endTime = Math.floor(Date.now() / 1000) + secondsToAddEndTime;
         let donationAmount = 50;
-        let mockCauseInstance = await MockCause.new(title, detail, targetAmount, startTime, endTime);
+        let mockCauseInstance = await MockCause.new(title, detail, targetAmount, startTime, endTime, ownerAccount, { from: deployerAccount });
         
         await mockCauseInstance.shiftTime(secondsToAdd + 10);
         await mockCauseInstance.Donate({from : donerAccount1, value: donationAmount});
         await mockCauseInstance.shiftTime(secondsToAddEndTime + 10);
 
         //Act
-        await mockCauseInstance.Withdraw();
-        let withdrawPromise = mockCauseInstance.Withdraw();
+        await mockCauseInstance.Withdraw({ from: ownerAccount });
+        let withdrawPromise = mockCauseInstance.Withdraw({ from: ownerAccount });
         
         //Assert
         await catchRevert(withdrawPromise, "Withdraw operation not allowed. Funds already withdrawn.");

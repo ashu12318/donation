@@ -25,6 +25,12 @@ Donation in crypto
 -- Creator of the Contract
 -- Auto Deprication: Close the contract after there is no fund...
 
+- Contract for each Cause
+-- Factory Pattern
+---- Use it for creating a new contract for every cause 
+---- Act as Registry(To provide address of all the causes)
+---- Circuit Breaker: Disable Contract after timeline is over
+
 - Fetch List of all active/future causes
 - Fetch all Cause by creator's address
 
@@ -37,12 +43,6 @@ Donation in crypto
 - Fetch Single Cause: Users
 
 # Future Goals
-- Contract for each Cause
--- Factory Pattern
----- Use it for creating a new contract for every cause 
----- Act as Registry(To provide address of all the causes)
----- Circuit Breaker: Disable Contract after timeline is over
-
 - Accept Donation in Any Token: Uniswap/Metamask Integration
 - Auto Swap to a Target stable coin
 -- Add target Stable Coin token while creating Cause

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity >=0.4.21 <0.7.0;
+pragma solidity 0.5.16;
 
 /// @title Cause Contract for Managing Cause Details and Operations
 /// @author Ashutosh Singh Parmar
@@ -13,6 +13,10 @@ contract Cause {
     /// @notice entity which created the Cause
     /// @return Etherium Address of Cause Creator 
     address payable public Owner;
+
+    /// @notice Address responsible for creation of this Contract
+    /// @return Address of the Factory Contract
+    address public Creator;
 
     /// @notice Cause Title
     /// @dev Should not be too long, place some limit
@@ -57,7 +61,7 @@ contract Cause {
     /// @param amount total amount withdrawn  
     event Withdrawal(address indexed sender, address indexed beneficiary, uint amount);
 
-    constructor(string memory title, string memory details, uint targetAmount, uint startTime, uint endTime) public {
+    constructor(string memory title, string memory details, uint targetAmount, uint startTime, uint endTime, address payable owner) public {
         //GTH: Make use of string library such as https://github.com/willitscale/solidity-util or https://github.com/Arachnid/solidity-stringutils
         
         require(bytes(title).length <= 20, "Please provide a short title which is under 20 character.");
@@ -66,14 +70,15 @@ contract Cause {
         require(startTime > now, "Start time should be a future time.");
         require(endTime > startTime, "End time should be in future compared to Start time.");
 
-        Owner = msg.sender;
+        Creator = msg.sender;
+        Owner = owner;
         Title = title;
         Details = details;
         TargetAmount = targetAmount;
         StartTime = startTime;
         EndTime = endTime;
         WithdrawalDone = false;
-        emit CauseCreated(msg.sender, title);
+        emit CauseCreated(owner, title);
     }
 
     //Design: AutoDeprication of Operation

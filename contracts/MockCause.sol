@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity >=0.4.21 <0.7.0;
+pragma solidity  0.5.16;
 import "./Cause.sol";
 
 /// @title Mock Cause extending Cause contract which provides some helpers for testing
@@ -9,8 +9,8 @@ import "./Cause.sol";
 contract MockCause is Cause {
     
     //Design: Made use of inheritence
-    constructor (string memory title, string memory detail, uint targetAmount, uint startTime, uint endTime) 
-    Cause(title, detail, targetAmount, startTime, endTime)
+    constructor (string memory title, string memory detail, uint targetAmount, uint startTime, uint endTime, address payable owner) 
+    Cause(title, detail, targetAmount, startTime, endTime, owner)
     public
     {
 
