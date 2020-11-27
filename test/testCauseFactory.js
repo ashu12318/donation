@@ -27,7 +27,7 @@ contract("CauseFactory", accounts => {
         let createCauseResult = await causeFactoryInstance.CreateCause(title, detail, targetAmount, startTime, endTime, { from: account1});
 
         //Assert
-        let causeAddress = createCauseResult.logs[0].args.cause;
+        let causeAddress = await causeFactoryInstance.Causes.call(0);
         let causeAddressSaved = await causeFactoryInstance.CreatorCauseMap.call(account1, 0);
         let causeStatus = await causeFactoryInstance.CauseStatusMap.call(causeAddress);
         assert(causeAddressSaved, causeAddress);
@@ -54,10 +54,25 @@ contract("CauseFactory", accounts => {
         assert.equal(createCauseResult.logs[0].args.title, title, "Expected CauseCreated event. Title of event do not match.");
     });
 
+    it("Get All Cause", async () => {
+        //Arrange
+        let startTime = Math.floor(Date.now() / 1000) + 100;
+        let endTime = Math.floor(Date.now() / 1000) + 2000;
+        let targetAmount = 100;
+        let causeFactoryInstance = await CauseFactory.new({from: account1});
+
+        //Act
+        await causeFactoryInstance.CreateCause("Title1", "Detail 1", 100, startTime, endTime, { from: account1});
+        await causeFactoryInstance.CreateCause("Title2", "Detail 2", 100, startTime, endTime, { from: account1});
+        await causeFactoryInstance.CreateCause("Title3", "Detail 3", 100, startTime, endTime, { from: account1});
+
+        //Assert
+        let causeAddresses = await causeFactoryInstance.GetAllCauses.call({ from: account2 });
+        assert.equal(causeAddresses.length, 3, "Expected 3 Causes.");
+    });
+
     it("Get all Cause for a Creator", async () => {
         //Arrange
-        let title = "Covid Relief Fund";
-        let detail = "A fund for relief measures for local businesses.";
         let startTime = Math.floor(Date.now() / 1000) + 100;
         let endTime = Math.floor(Date.now() / 1000) + 2000;
         let targetAmount = 100;

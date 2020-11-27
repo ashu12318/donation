@@ -14,6 +14,8 @@ contract CauseFactory {
     /// @return Address of the Owner of this Contract
     address public Admin;
 
+    address[] public Causes;
+
     mapping(address => address[]) public CreatorCauseMap; //Design Factory
 
     mapping(address => CauseStatus) public CauseStatusMap; //Design: Registry of Contract Status, https://medium.com/@i6mi6/solidty-smart-contracts-design-patterns-ecfa3b1e9784
@@ -45,6 +47,7 @@ contract CauseFactory {
     {
         Cause causeInstance = new Cause(title, detail, targetAmount, startTime, endTime, msg.sender);
         
+        Causes.push(address(causeInstance));
         CreatorCauseMap[msg.sender].push(address(causeInstance));
         
         CauseStatusMap[address(causeInstance)].Exists = true;
@@ -63,5 +66,15 @@ contract CauseFactory {
         return CreatorCauseMap[creator];
     }
 
+    /// @notice Gets all the Cause Contract Addresses created by supplied Creator 
+    /// @return causeAddresses All the Cause Contract Addresses created till now 
+    function GetAllCauses() 
+    public
+    view
+    returns(address[] memory causeAddresses) {
+        return Causes;
+    }
+
     //TODO: Provide Operation Mark Contract InActive, it will be called once fund has been withdrawn from the Contract successfully
+    //TODO: Provide Operation to get Cause Status
 }
