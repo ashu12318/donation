@@ -1,40 +1,19 @@
 import React, { Component } from "react";
-import CauseFactory from "../contracts/CauseFactory.json"
 import "../App.css";
 
-
 class CauseForm extends Component {
+
     constructor(props) {
         super(props);
 
-        this.state = { web3: props.web3, account: props.account, title: "", detail: "", targetAmount: 0, startTime: "", endTime: "" };
-
+        this.state = { web3: props.web3, account: props.account, causeFactory: props.causeFactoryContract, title: "", detail: "", targetAmount: 0, startTime: "", endTime: "" };
+        
         this.handleTitleChange = this.handleTitleChange.bind(this);
         this.handleDetailChange = this.handleDetailChange.bind(this);
         this.handleTargetAmountChange = this.handleTargetAmountChange.bind(this);
         this.handleStartTimeChange = this.handleStartTimeChange.bind(this);
         this.handleEndTimeChange = this.handleEndTimeChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    componentDidMount = async () => {
-        let web3 = this.state.web3;
-        const networkId = await this.getNetworkId(web3);
-        let causeFactoryInstance = await this.getCauseFactoryInstance(web3, networkId);
-        this.setState({ causeFactory: causeFactoryInstance });
-    };
-
-    async getNetworkId(web3) {
-        return await web3.eth.net.getId();
-    }
-
-    async getCauseFactoryInstance(web3, networkId) {
-        const deployedNetwork = CauseFactory.networks[networkId];
-        const causeFactoryInstance = new web3.eth.Contract(
-            CauseFactory.abi,
-            deployedNetwork && deployedNetwork.address,
-        );
-        return causeFactoryInstance;
     }
 
     handleTitleChange(e) {
@@ -73,6 +52,7 @@ class CauseForm extends Component {
         else if(!this.state.endTime) {
             return "Please provide end time.";
         }
+        
         let today = new Date();
         let startTime = new Date(this.state.startTime);
         let endTime = new Date(this.state.endTime);
@@ -83,7 +63,7 @@ class CauseForm extends Component {
         if(endTime <= startTime) {
             return "End Time should be a future date and should be after Start Date.";
         }
-
+        
         return null;
     }
 
@@ -97,10 +77,10 @@ class CauseForm extends Component {
         
         //Sending transaction to Cause Factory Contract
         let causeFactory = this.state.causeFactory;
-        let startTime = new Date(this.state.startTime);
-        let endTime = new Date(this.state.endTime);
+        let startTime = new Date(this.state.startTime).getTime() / 1000;
+        let endTime = new Date(this.state.endTime).getTime() / 1000;
 
-        causeFactory.methods.CreateCause(this.state.title, this.state.detail, this.state.targetAmount, startTime.getTime(), endTime.getTime())
+        causeFactory.methods.CreateCause(this.state.title, this.state.detail, this.state.targetAmount, startTime, endTime)
         .send({ from: this.state.account })
         .on("transactionHash", function(transactionHash) {
             console.log("Transaction Hash");
@@ -112,10 +92,12 @@ class CauseForm extends Component {
             console.log(receipt);
         })
         .on("error", function(error, receipt) {
-            alert("Something went wrong while creating cause.");
+            alert("Something went wrong while creating cause..\n" + error.message);
             console.log("Error");
             console.log(error);
         });
+
+        //TODO: Update Cause List on success
 
         e.preventDefault();
     };
@@ -123,6 +105,7 @@ class CauseForm extends Component {
     render() {
         return (
             <div>
+                <h1>Create Cause</h1>
                 <form onSubmit={this.handleSubmit}>
                     <table>
                         <tr>

@@ -10,10 +10,10 @@ Donation in crypto
 -- Header
 -- Description(Potentialy an offchain link)
 -- Target Amount
--- Accumulated Fund
 -- Deadline
 -- Start Date
--- Owner/Creator
+-- Owner
+-- Creator (Generally the CauseFactory)
 
 - Accept Ether
 
