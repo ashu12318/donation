@@ -5,11 +5,12 @@ import getWeb3 from "./getWeb3";
 //import { Button, Table } from "rimble-ui";
 import CauseForm from "./components/CauseForm"
 import CauseList from "./components/CauseList"
+import UserDetail from "./components/UserDetail"
 
 import "./App.css";
 
 class App extends Component {
-  state = { web3: null, accounts: null, causeFactoryContract: null, causeContract: null };
+  state = { web3: null, accounts: null, causeFactoryContract: null, causeContract: null, refresh: {}};
 
   componentDidMount = async () => {
     try {
@@ -18,6 +19,8 @@ class App extends Component {
 
       // Use web3 to get the user's accounts.
       const accounts = await web3.eth.getAccounts();
+      console.log("Account");
+      console.log(accounts[0]);
 
       let networkId = await this.getNetworkId(web3);
       let causeFactoryInstance = await this.getContractInstance(web3, networkId, CauseFactory);
@@ -47,28 +50,41 @@ class App extends Component {
     return contractInstance;
   }
 
+  async refreshUserDetails() {
+    alert("Refreshed");
+    this.setState({ refresh: {} });
+  }
+
   render() {
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
       <div className="App">
-        {/* User Detail Section */}
-        {/* Cause Form */}
+        { /* User Detail Section */ }
+        <div>
+          <UserDetail web3={ this.state.web3 } account={ this.state.accounts[0] } ></UserDetail>
+        </div>
+
+        { /* Cause Form */ }
         <div id="causeForm">
           <CauseForm 
-            web3={this.state.web3}
-            account={this.state.accounts[0]}
-            causeFactoryContract={this.state.causeFactoryContract}>
-
+            web3={ this.state.web3 }
+            account={ this.state.accounts[0] }
+            causeFactoryContract={ this.state.causeFactoryContract }
+            refreshUserDetails={ () => this.refreshUserDetails() }
+            >
           </CauseForm>
         </div>
+
         {/* Cause List */}
         <div id="causeList">
-          <CauseList web3={this.state.web3}
-            account={this.state.accounts[0]}
-            causeFactoryContract={this.state.causeFactoryContract}
-            causeContract={this.state.causeContract}>
+          <CauseList web3={ this.state.web3 }
+            account={ this.state.accounts[0] }
+            causeFactoryContract={ this.state.causeFactoryContract }
+            causeContract={ this.state.causeContract }
+            refreshUserDetails={ () => this.refreshUserDetails() }
+            >
             </CauseList>
         </div>
       </div>

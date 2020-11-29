@@ -1,13 +1,14 @@
 import React, {Component} from "react"
 import Cause from "../dto/Cause"
 import Utility from "../utility"
+import DonationBox from "./DonationBox"
 
 class CauseList extends Component {
     //TODO: Refresh on New Cause Create: Between two child component
     constructor(props) {
         super(props);
 
-        this.state = { web3: props.web3, account: props.account, causeFactoryContract: props.causeFactoryContract, causeContract: props.causeContract, causeAddresses: [], causes: [] };
+        this.state = { web3: props.web3, account: props.account, causeFactoryContract: props.causeFactoryContract, causeContract: props.causeContract, causeAddresses: [], causes: [], cause: null };
 
         this.handleGetAllCauses = this.handleGetAllCauses.bind(this);
     }
@@ -33,9 +34,10 @@ class CauseList extends Component {
             return;
         }
         
+        let web3 = this.state.web3;
         let account = this.state.account;
         let causeContract = this.state.causeContract;
-        let causes = this.state.causes;
+        let causes = [];
 
         addresses.forEach((address) => {
             let cause = new Cause(address);
@@ -47,7 +49,7 @@ class CauseList extends Component {
                 cause.detail = detail;
             });
             causeContract.methods.TargetAmount().call({ from: account}).then((targetAmount) => { 
-                cause.targetAmount = targetAmount;
+                cause.targetAmount = web3.utils.fromWei(targetAmount);
             });
             causeContract.methods.StartTime().call({ from: account}).then((startTime) => { 
                 let startDate = new Date(startTime * 1000);
@@ -60,6 +62,9 @@ class CauseList extends Component {
             causeContract.methods.Owner().call({ from: account }).then((owner) => { 
                 cause.owner = owner;
             });
+            web3.eth.getBalance(address, function(error, balance) {
+                cause.balance = web3.utils.fromWei(balance);
+            });
             causes.push(cause);
         });
 
@@ -69,13 +74,42 @@ class CauseList extends Component {
         }, 1000);
     }
     
-    async donate(causeAddress) {
-        //TODO: Get User Input on how much to donate
-        //Perform Donation
+    async showDonate(cause) {
+        this.setState({ cause: cause});
+    }
 
+    async donate(causeAddress, amountInEther) {
+
+        let web3 = this.state.web3;
+        let account = this.state.account;
+        let causeContract = this.state.causeContract;
+        causeContract.options.address = causeAddress;
+
+        let donationAmountInWei = web3.utils.toWei(amountInEther.toString());
+        causeContract.methods.Donate().send( { from: account, value: donationAmountInWei } )
+        .on("transactionHash", (transactionHash) => {
+            console.log("Transaction Hash");
+            console.log(transactionHash);
+        })
+        .on("receipt", (receipt) => {
+            alert("Donation Done.");
+            console.log("Receipt");
+            console.log(receipt);
+
+            this.props.refreshUserDetails();
+            this.loadCauses();
+        })
+        .on("error", (error, receipt) => {
+            //TODO: Formatting error message when something went wrong on blockchain
+            alert("Something went wrong while withdrawing money.\n" + error.message); //This works when reject is done with metamask...
+            console.log("Error");
+            console.log(error);
+        });
     }
 
     async withdraw(causeAddress) {
+        //TODO: Fix the issue with withdrawal: Even the fund is there, its showing funds withdrawn
+        let web3 = this.state.web3;
         let causeContract = this.state.causeContract;
         let account = this.state.account;
         let causes = this.state.causes;
@@ -85,7 +119,7 @@ class CauseList extends Component {
 
         let isOwner = cause.owner.toLowerCase() == account.toLowerCase(); 
         if(!isOwner) {
-            alert("Only owners allowed to withraw funds.");
+            alert("Only owners allowed to withdraw funds.");
             return;
         }
 
@@ -96,22 +130,19 @@ class CauseList extends Component {
             console.log("Transaction Hash");
             console.log(transactionHash);
         })
-        .on("recepit", function(receipt) {
+        .on("receipt", function(receipt) {
+            this.props.refreshUserDetails();
             alert("Withdrawal Done.");
             console.log("Receipt");
             console.log(receipt);
         })
         .on("error", function(error, reciept) {
             //TODO: Formatting error message when something went wrong on blockchain
-            alert("Something went wrong while withdrawing money.\n" + error.message); //This works when reject is done with metamask...
+            alert("Something went wrong while withdrawing money.\n" + error.message);
             console.log("Error");
             console.log(error);
         });
-        
-        //TODO: Feedback to user upon successful withdrawal
     }
-
-    //TODO - Design Cause List Item
 
     render() {
         let causes = this.state.causes;
@@ -125,19 +156,26 @@ class CauseList extends Component {
         else
         {
             causeDetails = causes.map((cause, index) => {
+                let isOwner = cause.owner.toLowerCase() == account.toLowerCase();
                 return(
-                    <li key={index} title={ cause.address }>
+                    <li key={ index } title={ cause.address }>
                         <lable>{ cause.title }</lable> 
                         &nbsp;
                         <lable>{ cause.detail }</lable>
                         &nbsp;
-                        <lable>{ cause.targetAmount }</lable>
+                        <lable>Target: { cause.targetAmount } Ether</lable>
+                        &nbsp;
+                        <lable>Bal: { cause.balance } Ether</lable>
                         &nbsp;
                         <lable>{ cause.startTime }</lable>
                         &nbsp;
                         <lable>{ cause.endTime }</lable>
-                        <button onClick={ () => this.donate(cause.address) }>Donate</button>
-                        <button onClick={ () => this.withdraw(cause.address) }>Withdraw</button>
+                        &nbsp;
+                        <button onClick={ () => this.showDonate(cause) }>Donate</button>
+                        {
+                            isOwner && 
+                            <button onClick={ () => this.withdraw(cause.address) }>Withdraw</button>
+                        }
                     </li>
                 );
             });
@@ -146,6 +184,8 @@ class CauseList extends Component {
             <div>
                 <h1>Cause List</h1>
                 <ul>{ causeDetails }</ul>
+                <br />
+                <DonationBox cause={ this.state.cause } donate={ (address, amountInEther) => this.donate(address, amountInEther)} ></DonationBox>
             </div>
         );
     };

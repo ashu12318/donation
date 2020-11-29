@@ -6,7 +6,7 @@ class CauseForm extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { web3: props.web3, account: props.account, causeFactory: props.causeFactoryContract, title: "", detail: "", targetAmount: 0, startTime: "", endTime: "" };
+        this.state = { web3: props.web3, account: props.account, causeFactory: props.causeFactoryContract, title: "", detail: "", targetAmount: 0.0, startTime: "", endTime: "" };
         
         this.handleTitleChange = this.handleTitleChange.bind(this);
         this.handleDetailChange = this.handleDetailChange.bind(this);
@@ -25,7 +25,7 @@ class CauseForm extends Component {
     }
 
     handleTargetAmountChange(e) {
-        this.setState({ targetAmount: parseInt(e.target.value) });
+        this.setState({ targetAmount: parseFloat(e.target.value) });
     }
 
     handleStartTimeChange(e) {
@@ -76,11 +76,13 @@ class CauseForm extends Component {
         }
         
         //Sending transaction to Cause Factory Contract
+        let web3 = this.state.web3;
         let causeFactory = this.state.causeFactory;
         let startTime = new Date(this.state.startTime).getTime() / 1000;
         let endTime = new Date(this.state.endTime).getTime() / 1000;
+        let targetAmount = web3.utils.toWei(this.state.targetAmount.toString());
 
-        causeFactory.methods.CreateCause(this.state.title, this.state.detail, this.state.targetAmount, startTime, endTime)
+        causeFactory.methods.CreateCause(this.state.title, this.state.detail, targetAmount, startTime, endTime)
         .send({ from: this.state.account })
         .on("transactionHash", function(transactionHash) {
             console.log("Transaction Hash");
@@ -90,14 +92,14 @@ class CauseForm extends Component {
             alert("Cause created.");
             console.log("Receipt");
             console.log(receipt);
+            
+            this.props.refreshUserDetails(); //TODO: Why create cause is not refreshing user details?
         })
         .on("error", function(error, receipt) {
             alert("Something went wrong while creating cause..\n" + error.message);
             console.log("Error");
             console.log(error);
         });
-
-        //TODO: Update Cause List on success
 
         e.preventDefault();
     };
@@ -138,13 +140,14 @@ class CauseForm extends Component {
                         </tr>
                         <tr>
                             <td>
-                                <label for="targetAmount">Target Amount:</label>
+                                <label for="targetAmount">Target Amount(Ether):</label>
                             </td>
                             <td>
                                 <input id="targetAmount" type="number"
                                     value={this.state.targetAmount}
                                     onChange={this.handleTargetAmountChange}
-                                    min="0" step="1"
+                                    placeholder="In Ether"
+                                    min="0" step="0.00001"
                                 >
                                 </input>
                             </td>

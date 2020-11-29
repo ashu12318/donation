@@ -8,6 +8,7 @@ class Cause {
     startTime;
     endTime;
     owner;
+    balance;
 }
 
 export default Cause;
