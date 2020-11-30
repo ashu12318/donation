@@ -9,7 +9,9 @@ pragma solidity 0.5.16;
 /// @notice Enables to create Cause
 contract CauseFactory {
     
-    bool private IsEnable;
+    /// @notice Status of Cause Factory
+    /// @return true if Contract operations are allowed otherwise false.
+    bool public IsEnable;
 
     /// @notice Owner of this Factory Contract
     /// @dev Owner will have admin privilages for this Contract

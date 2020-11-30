@@ -20,3 +20,12 @@
 .App-link {
   color: #09d3ac;
 }
+
+.CauseList {
+  width: 800px;
+}
+
+.UserDetail {
+  width: 800px;
+  align-self: center;
+}

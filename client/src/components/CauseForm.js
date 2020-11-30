@@ -93,7 +93,7 @@ class CauseForm extends Component {
             console.log("Receipt");
             console.log(receipt);
             
-            this.props.refreshUserDetails(); //TODO: Why create cause is not refreshing user details?
+            this.props.refreshUserDetails();
         })
         .on("error", function(error, receipt) {
             alert("Something went wrong while creating cause..\n" + error.message);

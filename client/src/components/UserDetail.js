@@ -1,4 +1,5 @@
-import React, { Component } from "react"
+import React, { Component } from "react";
+import { Avatar, EthAddress } from 'rimble-ui';
 
 class UserDetail extends Component {
     constructor(props) {
@@ -20,8 +21,14 @@ class UserDetail extends Component {
 
         return(
             <div>
-                Hello: <label>{ this.state.account }</label>
-                Balance: <label>{ this.state.balance }</label>
+                Hello:<label ><EthAddress address={ this.state.account } textLabels  /></label>
+                &nbsp;
+                Balance: <label>{ this.state.balance }
+                    <Avatar
+                        size="small"
+                        src=""
+                        />
+                </label>
             </div>
         );
     };

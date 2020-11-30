@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import CauseFactory from "./contracts/CauseFactory.json";
 import Cause from "./contracts/Cause.json";
 import getWeb3 from "./getWeb3";
-//import { Button, Table } from "rimble-ui";
+import { Avatar, Button } from "rimble-ui";
 import CauseForm from "./components/CauseForm"
 import CauseList from "./components/CauseList"
 import UserDetail from "./components/UserDetail"
@@ -28,6 +28,8 @@ class App extends Component {
 
       this.setState({ web3, accounts, causeFactoryContract: causeFactoryInstance, causeContract: causeInstance });
 
+      this.toggleContractStatus = this.toggleContractStatus.bind(this);
+
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -51,8 +53,25 @@ class App extends Component {
   }
 
   async refreshUserDetails() {
-    alert("Refreshed");
     this.setState({ refresh: {} });
+  }
+
+  async toggleContractStatus() {
+    let causeFactoryContract = this.state.causeFactoryContract;
+    causeFactoryContract.methods.ToggleContractStatus().send({ from: this.state.accounts[0] })
+    .on("transactionHash", (transactionHash) => {
+      console.log("ToggleContractStatus: Transaction Hash: " + transactionHash);
+    })
+    .on("receipt", (receipt) => {
+      console.log("ToggleContractStatus: Receipt");
+      console.log(receipt);
+      alert("Status toggled.");
+    })
+    .on("error", (error, receipt) => {
+      console.log("ToggleContractStatus: Error");
+      console.log(error);
+      alert("Something went wrong while withdrawing money.\n" + error.message);
+    });
   }
 
   render() {
@@ -61,8 +80,12 @@ class App extends Component {
     }
     return (
       <div className="App">
-        { /* User Detail Section */ }
+        {/* TODO: Show text based on contract status */}
         <div>
+          <Button onClick={ () => this.toggleContractStatus() } >Toggle Contract Status</Button>
+        </div>
+        { /* User Detail Section */ }
+        <div className="UserDetail">
           <UserDetail web3={ this.state.web3 } account={ this.state.accounts[0] } ></UserDetail>
         </div>
 
@@ -78,7 +101,7 @@ class App extends Component {
         </div>
 
         {/* Cause List */}
-        <div id="causeList">
+        <div id="causeList" className="CauseList">
           <CauseList web3={ this.state.web3 }
             account={ this.state.accounts[0] }
             causeFactoryContract={ this.state.causeFactoryContract }

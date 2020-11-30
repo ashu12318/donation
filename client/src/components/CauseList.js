@@ -2,6 +2,7 @@ import React, {Component} from "react"
 import Cause from "../dto/Cause"
 import Utility from "../utility"
 import DonationBox from "./DonationBox"
+import { Table, Button } from 'rimble-ui';
 
 class CauseList extends Component {
     constructor(props) {
@@ -10,10 +11,6 @@ class CauseList extends Component {
         this.state = { web3: props.web3, account: props.account, causeFactoryContract: props.causeFactoryContract, causeContract: props.causeContract, causeAddresses: [], causes: [], cause: null };
 
         this.handleGetAllCauses = this.handleGetAllCauses.bind(this);
-    }
-
-    componentDidMount = async () => {
-        await this.loadCauses();
     }
 
     async loadCauses() {
@@ -29,7 +26,7 @@ class CauseList extends Component {
             return;
         }
 
-        if (addresses == null || addresses.length == 0){
+        if (addresses === null || addresses.length === 0){
             return;
         }
         
@@ -67,7 +64,6 @@ class CauseList extends Component {
             causes.push(cause);
         });
 
-        //TODO: Changes made in Cause object doesn't get reflected in UI: Fix this with more relible option
         setTimeout(() => {
             this.setState({ causeAddresses: addresses, causes: causes});
         }, 1000);
@@ -107,7 +103,6 @@ class CauseList extends Component {
     }
 
     async withdraw(causeAddress) {
-        //TODO: Fix the issue with withdrawal: Even the fund is there, its showing funds withdrawn
         let web3 = this.state.web3;
         let causeContract = this.state.causeContract;
         let account = this.state.account;
@@ -144,19 +139,21 @@ class CauseList extends Component {
     }
 
     render() {
+        this.loadCauses();
         let causes = this.state.causes;
         let account = this.state.account;
         
         let causeDetails;
-        if(causes == null || causes.length === 0)
+        if(causes === 'undefined' || causes == null || causes.length === 0)
         {
             causeDetails = <p>No Cause Created.</p>
         }
         else
         {
             causeDetails = causes.map((cause, index) => {
-                let isOwner = cause.owner.toLowerCase() == account.toLowerCase();
+                let isOwner = cause.owner.toLowerCase() === account.toLowerCase();
                 return(
+                    /*
                     <li key={ index } title={ cause.address }>
                         <lable>{ cause.title }</lable> 
                         &nbsp;
@@ -176,15 +173,50 @@ class CauseList extends Component {
                             <button onClick={ () => this.withdraw(cause.address) }>Withdraw</button>
                         }
                     </li>
+                    */
+                    <tr key={ index }>
+                        <td>{ cause.title }</td>
+                        <td>{ cause.detail }</td>
+                        <td>{ cause.targetAmount }</td>
+                        <td>{ cause.balance }</td>
+                        <td>{ cause.startTime }</td>
+                        <td>{ cause.endTime }</td>
+                        <td><Button size="small" icon="Send" onClick={ () => this.showDonate(cause) }>Donate</Button></td>
+                        <td>
+                            {
+                                isOwner && 
+                                <Button size="small" onClick={ () => this.withdraw(cause.address) }>Withdraw</Button>
+                            }
+                        </td>
+                    </tr>
                 );
             });
         }
         return (
             <div>
+                <div>
                 <h1>Cause List</h1>
-                <ul>{ causeDetails }</ul>
-                <br />
-                <DonationBox cause={ this.state.cause } donate={ (address, amountInEther) => this.donate(address, amountInEther)} ></DonationBox>
+                <Table>
+                    <thead>
+                        <tr>
+                        <th>Cause Title</th>
+                        <th>Detail</th>
+                        <th>Target Amount</th>
+                        <th>Balance</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Donate</th>
+                        <th>Withdraw</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        { causeDetails }
+                    </tbody>
+                </Table>
+                </div>
+                <div>
+                    <DonationBox cause={ this.state.cause } donate={ (address, amountInEther) => this.donate(address, amountInEther)} ></DonationBox>
+                </div>
             </div>
         );
     };
