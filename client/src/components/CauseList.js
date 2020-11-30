@@ -4,7 +4,6 @@ import Utility from "../utility"
 import DonationBox from "./DonationBox"
 
 class CauseList extends Component {
-    //TODO: Refresh on New Cause Create: Between two child component
     constructor(props) {
         super(props);
 

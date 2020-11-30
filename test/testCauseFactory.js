@@ -86,4 +86,53 @@ contract("CauseFactory", accounts => {
         let causeAddresses = await causeFactoryInstance.GetCauses.call(account1, {from: account2});
         assert.equal(causeAddresses.length, 2, "Expected 2 Causes.");
     });
+
+    it("Disable Cause Factory: Do not allow contract creation operation", async () => {
+        //Arrange
+        let causeFactoryInstance = await CauseFactory.new({ from: account1 });
+        causeFactoryInstance.ToggleContractStatus({ from: account1 });
+
+        let startTime = Math.floor(Date.now() / 1000) + 100;
+        let endTime = Math.floor(Date.now() / 1000) + 2000;
+        let targetAmount = 100;
+
+        //Act
+        let createCauseResult = causeFactoryInstance.CreateCause("Title1", "Detail 1", 100, startTime, endTime, { from: account1});
+
+        //Assert
+        catchRevert(createCauseResult, "Contract is disabled. No operation allowed.");
+    });
+
+    it("Enable Cause Factory", async () => {
+        //Arrange
+        let causeFactoryInstance = await CauseFactory.new({ from: account1 });
+        causeFactoryInstance.ToggleContractStatus({ from: account1 });
+        causeFactoryInstance.ToggleContractStatus({ from: account1 });
+
+        let startTime = Math.floor(Date.now() / 1000) + 100;
+        let endTime = Math.floor(Date.now() / 1000) + 2000;
+        let targetAmount = 100;
+
+        //Act
+        let createCauseResult = await causeFactoryInstance.CreateCause("Title1", "Detail 1", 100, startTime, endTime, { from: account1});
+
+        //Assert
+        let causeAddress = await causeFactoryInstance.Causes.call(0);
+        let causeAddressSaved = await causeFactoryInstance.CreatorCauseMap.call(account1, 0);
+        let causeStatus = await causeFactoryInstance.CauseStatusMap.call(causeAddress);
+        assert(causeAddressSaved, causeAddress);
+        assert(causeStatus.Exists, "Cause status Exists not updated properly in mapping.");
+        assert(causeStatus.Active, "Cause status Active not updated properly in mapping.");
+    });
+
+    it("Disable Cause Factory: Only Admin is allowed", async () => {
+        //Arrange
+        let causeFactoryInstance = await CauseFactory.new({ from: account1 });
+
+        //Act
+        let response = causeFactoryInstance.ToggleContractStatus({ from: account2 });
+
+        //Assert
+        catchRevert(response, "Only admin is allowed to execute this operation.");
+    });
 });

@@ -9,6 +9,8 @@ pragma solidity 0.5.16;
 /// @notice Enables to create Cause
 contract CauseFactory {
     
+    bool private IsEnable;
+
     /// @notice Owner of this Factory Contract
     /// @dev Owner will have admin privilages for this Contract
     /// @return Address of the Owner of this Contract
@@ -22,6 +24,7 @@ contract CauseFactory {
     
     constructor() public {
         Admin = msg.sender;
+        IsEnable = true;
     }
 
     /// @notice Structure to hold Cause status
@@ -36,6 +39,21 @@ contract CauseFactory {
     /// @param title Title of the newly created Cause
     event CauseCreated(address indexed creator, address cause, string title);
 
+    modifier isAdmin() {
+        require(msg.sender == Admin, "Only admin is allowed to execute this operation.");
+        _;
+    }
+
+    modifier isContractEnabled() {
+        require(IsEnable, "Contract is disabled. No operation allowed.");
+        _;
+    }
+
+    /// @notice Toggles the status of the Factory. Operations are allowed only when its enabled. Circuit breaker pattern.
+    function ToggleContractStatus() external isAdmin {
+        IsEnable = !IsEnable; //Design: Circuit Breaker Pattern
+    }
+
     /// @notice Creates a new Cause with the provided parameters and emits an Event
     /// @param title Title for Cause
     /// @param detail A brief detail about Cause
@@ -44,6 +62,7 @@ contract CauseFactory {
     /// @param endTime End Time for Cause
     function CreateCause(string memory title, string memory detail, uint targetAmount, uint startTime, uint endTime) 
     public
+    isContractEnabled
     {
         Cause causeInstance = new Cause(title, detail, targetAmount, startTime, endTime, msg.sender);
         
