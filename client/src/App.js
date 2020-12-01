@@ -45,6 +45,9 @@ class App extends Component {
 
   async getContractInstance(web3, networkId, contractJson) {
     const deployedNetwork = contractJson.networks[networkId];
+    if (!deployedNetwork) {
+      throw "Contract not deployed to network.";
+    }
     const contractInstance = new web3.eth.Contract(
       contractJson.abi,
       deployedNetwork && deployedNetwork.address,
@@ -81,16 +84,16 @@ class App extends Component {
     return (
       <div className="App">
         {/* TODO: Show text based on contract status */}
-        <div>
+        <div className="ToggleButton">
           <Button onClick={ () => this.toggleContractStatus() } >Toggle Contract Status</Button>
         </div>
         { /* User Detail Section */ }
-        <div className="UserDetail">
+        <div >
           <UserDetail web3={ this.state.web3 } account={ this.state.accounts[0] } ></UserDetail>
         </div>
 
         { /* Cause Form */ }
-        <div id="causeForm">
+        <div id="causeForm" className="CauseForm">
           <CauseForm 
             web3={ this.state.web3 }
             account={ this.state.accounts[0] }

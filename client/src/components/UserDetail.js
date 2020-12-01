@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { Avatar, EthAddress } from 'rimble-ui';
+import { Table, EthAddress } from 'rimble-ui';
 
 class UserDetail extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { balance: 0, account : props.account };
+        this.state = { balance: 0, account : props.account, networkName: "" };
     }
 
     render() {
@@ -19,16 +19,31 @@ class UserDetail extends Component {
             obj.setState({ balance: userBalance });
         });
 
+        web3.eth.net.getNetworkType(function (error, name) {
+            if (!error) {
+                obj.setState({ networkName: name });
+            }
+        });
+
         return(
             <div>
-                Hello:<label ><EthAddress address={ this.state.account } textLabels  /></label>
-                &nbsp;
-                Balance: <label>{ this.state.balance }
-                    <Avatar
-                        size="small"
-                        src=""
-                        />
-                </label>
+                <table style={{ width: "1200px" }}>
+                    <tbody>
+                        <tr>
+                            <td style={{ width: "15%" }}>
+                                <b>Network: { this.state.networkName } </b>
+                            </td>
+                            <td style={{ width: "65%" }}>
+                                <b>Hello:</b> <label ><EthAddress address={ this.state.account } textLabels  /></label>
+                            </td>
+                            <td style={{ width: "20%" }}>
+                                <h4>
+                                    Balance: <label>{ this.state.balance } </label>
+                                </h4>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         );
     };

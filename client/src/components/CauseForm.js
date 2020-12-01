@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Button, Input } from 'rimble-ui'
 import "../App.css";
 
 class CauseForm extends Component {
@@ -106,7 +107,7 @@ class CauseForm extends Component {
 
     render() {
         return (
-            <div>
+            <div className="CreateCauseForm">
                 <h1>Create Cause</h1>
                 <form onSubmit={this.handleSubmit}>
                     <table>
@@ -115,13 +116,13 @@ class CauseForm extends Component {
                                 <label for="title">Title:</label>
                             </td>
                             <td>
-                                <input id="title" type="text"
+                                <Input id="title" type="text"
                                     value={this.state.title}
                                     onChange={this.handleTitleChange}
                                     maxLength="10"
                                     placeholder="Max 10 characters"
                                 >
-                                </input>
+                                </Input>
                             </td>
                         </tr>
                         <tr>
@@ -129,13 +130,13 @@ class CauseForm extends Component {
                                 <label for="detail">Detail:</label>
                             </td>
                             <td>
-                                <input id="detail" type="text"
+                                <Input id="detail" type="text"
                                     value={this.state.detail}
                                     onChange={this.handleDetailChange}
                                     maxLength="100"
                                     placeholder="Max 100 characters"
                                 >
-                                </input>
+                                </Input>
                             </td>
                         </tr>
                         <tr>
@@ -143,13 +144,13 @@ class CauseForm extends Component {
                                 <label for="targetAmount">Target Amount(Ether):</label>
                             </td>
                             <td>
-                                <input id="targetAmount" type="number"
+                                <Input id="targetAmount" type="number"
                                     value={this.state.targetAmount}
                                     onChange={this.handleTargetAmountChange}
                                     placeholder="In Ether"
                                     min="0" step="0.00001"
                                 >
-                                </input>
+                                </Input>
                             </td>
                         </tr>
                         <tr>
@@ -157,11 +158,11 @@ class CauseForm extends Component {
                                 <label for="startTime">Start Time:</label>
                             </td>
                             <td>
-                                <input id="startTime" type="date"
+                                <Input id="startTime" type="date"
                                     value={this.state.startTime}
                                     onChange={this.handleStartTimeChange}
                                 >
-                                </input>
+                                </Input>
                             </td>
                         </tr>
                         <tr>
@@ -169,17 +170,17 @@ class CauseForm extends Component {
                                 <label for="endTime">End Time:</label>
                             </td>
                             <td>
-                                <input id="endTime" type="date"
+                                <Input id="endTime" type="date" 
                                     value={this.state.endTime}
                                     onChange={this.handleEndTimeChange}
                                 >
-                                </input>
+                                </Input>
                             </td>
                         </tr>
                         <tr>
                             <td></td>
                             <td align="center">
-                                <input type="submit" value="CREATE"></input>
+                                <Input type="submit" value="CREATE"></Input>
                             </td>
                         </tr>
                     </table>

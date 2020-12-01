@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-
+import { Button, Input, Field } from 'rimble-ui'
 import Cause from '../dto/Cause'
 
 class DonationBox extends Component {
@@ -29,19 +29,16 @@ class DonationBox extends Component {
         return (
             <div>
                 <h3>Donate For:</h3>
-                <label>{ cause.title }</label>
+                <label>{ cause.title }({ cause.detail })</label>
                 <br/>
-                <label>{ cause.detail }</label>
+                <label>Target: { cause.targetAmount }</label>
                 <br/>
-                <label>{ cause.targetAmount }</label>
-                <br/>
-                {/* TODO: Put some style or icon for ether */}
-                <input id="donationAmount" type="number" 
+                <Input id="donationAmount" type="number" 
                     min="0" step="0.000001" placeholder="Amount in Ether" 
                     value={ this.state.donationAmount } 
                     onChange={this.handleDonationAmountChange}
                     />
-                <button onClick={ () => this.donate() }>Donate</button>
+                <Button onClick={ () => this.donate() } icon="Send">Donate</Button>
             </div>
         );
     }

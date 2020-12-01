@@ -21,11 +21,23 @@
   color: #09d3ac;
 }
 
+.CauseForm {
+  width: 800px;
+}
+
 .CauseList {
   width: 800px;
 }
 
 .UserDetail {
   width: 800px;
-  align-self: center;
+  /*align-self: center; */
+}
+
+.CreateCauseForm {
+  width: 800px;
+}
+
+.ToggleButton {
+  width: 1200px;
 }

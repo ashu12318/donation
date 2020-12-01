@@ -146,6 +146,8 @@ class CauseList extends Component {
         let causeDetails;
         if(causes === 'undefined' || causes == null || causes.length === 0)
         {
+            console.log("Here is the content");
+            console.log(causes);
             causeDetails = <p>No Cause Created.</p>
         }
         else
@@ -153,27 +155,6 @@ class CauseList extends Component {
             causeDetails = causes.map((cause, index) => {
                 let isOwner = cause.owner.toLowerCase() === account.toLowerCase();
                 return(
-                    /*
-                    <li key={ index } title={ cause.address }>
-                        <lable>{ cause.title }</lable> 
-                        &nbsp;
-                        <lable>{ cause.detail }</lable>
-                        &nbsp;
-                        <lable>Target: { cause.targetAmount } Ether</lable>
-                        &nbsp;
-                        <lable>Bal: { cause.balance } Ether</lable>
-                        &nbsp;
-                        <lable>{ cause.startTime }</lable>
-                        &nbsp;
-                        <lable>{ cause.endTime }</lable>
-                        &nbsp;
-                        <button onClick={ () => this.showDonate(cause) }>Donate</button>
-                        {
-                            isOwner && 
-                            <button onClick={ () => this.withdraw(cause.address) }>Withdraw</button>
-                        }
-                    </li>
-                    */
                     <tr key={ index }>
                         <td>{ cause.title }</td>
                         <td>{ cause.detail }</td>
@@ -194,29 +175,39 @@ class CauseList extends Component {
         }
         return (
             <div>
-                <div>
-                <h1>Cause List</h1>
-                <Table>
-                    <thead>
-                        <tr>
-                        <th>Cause Title</th>
-                        <th>Detail</th>
-                        <th>Target Amount</th>
-                        <th>Balance</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                        <th>Donate</th>
-                        <th>Withdraw</th>
-                        </tr>
-                    </thead>
+                <Table className="CauseListTable">
                     <tbody>
-                        { causeDetails }
+                        <tr>
+                            <td>
+                                <Table>
+                                    <thead>
+                                        <tr style={ { alignContent: "center" }}>
+                                            <th colSpan="8">
+                                                <h1>Cause List</h1>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th>Cause Title</th>
+                                            <th>Detail</th>
+                                            <th>Target Amount</th>
+                                            <th>Balance</th>
+                                            <th>Start Time</th>
+                                            <th>End Time</th>
+                                            <th>Donate</th>
+                                            <th>Withdraw</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        { causeDetails }
+                                    </tbody>
+                                </Table>
+                            </td>
+                            <td>
+                                <DonationBox cause={ this.state.cause } donate={ (address, amountInEther) => this.donate(address, amountInEther)} ></DonationBox>
+                            </td>
+                        </tr>
                     </tbody>
                 </Table>
-                </div>
-                <div>
-                    <DonationBox cause={ this.state.cause } donate={ (address, amountInEther) => this.donate(address, amountInEther)} ></DonationBox>
-                </div>
             </div>
         );
     };
