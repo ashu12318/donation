@@ -83,12 +83,12 @@ class CauseList extends Component {
         let donationAmountInWei = web3.utils.toWei(amountInEther.toString());
         causeContract.methods.Donate().send( { from: account, value: donationAmountInWei } )
         .on("transactionHash", (transactionHash) => {
-            console.log("Transaction Hash");
+            console.log("Donate: Transaction Hash");
             console.log(transactionHash);
         })
         .on("receipt", (receipt) => {
             alert("Donation Done.");
-            console.log("Receipt");
+            console.log("Donate: Receipt");
             console.log(receipt);
 
             this.props.refreshUserDetails();
@@ -97,7 +97,7 @@ class CauseList extends Component {
         .on("error", (error, receipt) => {
             //TODO: Formatting error message when something went wrong on blockchain
             alert("Something went wrong while withdrawing money.\n" + error.message); //This works when reject is done with metamask...
-            console.log("Error");
+            console.log("Donate: Error");
             console.log(error);
         });
     }
@@ -121,19 +121,19 @@ class CauseList extends Component {
         
         causeContract.methods.Withdraw().send( {from : account } )
         .on("transactionhash", function(transactionHash) {
-            console.log("Transaction Hash");
+            console.log("Withdraw: Transaction Hash");
             console.log(transactionHash);
         })
         .on("receipt", function(receipt) {
             this.props.refreshUserDetails();
             alert("Withdrawal Done.");
-            console.log("Receipt");
+            console.log("Withdraw: Receipt");
             console.log(receipt);
         })
         .on("error", function(error, reciept) {
             //TODO: Formatting error message when something went wrong on blockchain
             alert("Something went wrong while withdrawing money.\n" + error.message);
-            console.log("Error");
+            console.log("Withdraw: Error");
             console.log(error);
         });
     }
@@ -146,8 +146,6 @@ class CauseList extends Component {
         let causeDetails;
         if(causes === 'undefined' || causes == null || causes.length === 0)
         {
-            console.log("Here is the content");
-            console.log(causes);
             causeDetails = <p>No Cause Created.</p>
         }
         else

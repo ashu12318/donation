@@ -23,6 +23,9 @@ class App extends Component {
       console.log(accounts[0]);
 
       let networkId = await this.getNetworkId(web3);
+      if (networkId != 5777 && networkId != 4) {
+        throw "Contract not deployed to network.";
+      }
       let causeFactoryInstance = await this.getContractInstance(web3, networkId, CauseFactory);
       let causeInstance = await this.getContractInstance(web3, networkId, Cause);
 
@@ -45,9 +48,6 @@ class App extends Component {
 
   async getContractInstance(web3, networkId, contractJson) {
     const deployedNetwork = contractJson.networks[networkId];
-    if (!deployedNetwork) {
-      throw "Contract not deployed to network.";
-    }
     const contractInstance = new web3.eth.Contract(
       contractJson.abi,
       deployedNetwork && deployedNetwork.address,

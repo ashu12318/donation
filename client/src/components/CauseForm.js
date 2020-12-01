@@ -86,19 +86,19 @@ class CauseForm extends Component {
         causeFactory.methods.CreateCause(this.state.title, this.state.detail, targetAmount, startTime, endTime)
         .send({ from: this.state.account })
         .on("transactionHash", function(transactionHash) {
-            console.log("Transaction Hash");
+            console.log("CreateCause: Transaction Hash");
             console.log(transactionHash);
         })
         .on("receipt", function(receipt) {
             alert("Cause created.");
-            console.log("Receipt");
+            console.log("CreateCause: Receipt");
             console.log(receipt);
             
             this.props.refreshUserDetails();
         })
         .on("error", function(error, receipt) {
             alert("Something went wrong while creating cause..\n" + error.message);
-            console.log("Error");
+            console.log("CreateCause: Error");
             console.log(error);
         });
 

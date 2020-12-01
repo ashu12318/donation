@@ -1,3 +1,5 @@
 reference.txt
 WrittingSmartContracts.md
 /client/src/contracts
+node_modules
+.env
