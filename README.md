@@ -93,7 +93,8 @@ You can find the Smart Contract Rinkeby Address in "Donation/deploued_addresses.
 2. Running front-end
     1. Move to "Donation/client" directory
     2. run the local development server from console/terminal
-        > npm install
+        > npm install  
+
         > npm start
     3. This should launch the Dapp at "localhost:3000"
     4. Ensure you are connected to Rinkeby blockchain network i.e. network id 4
@@ -120,6 +121,13 @@ Note: Toggle Contract Status is only available to ME(:)) i.e. I am the admin for
 * **Truffle Framework:** Development made easy
 * **Ganache:** Local Blockchain Network
 * **Visual Studio Code**
+* **Remix IDE:** For Quick Smart Contract Prototyping
+
+# Design Patterns
+Please see Donation/design_pattern_decisions.md
+
+# Security against Attack Vectors
+Please see Donation/avoiding_common_attacks.md
 
 # Future Goals
 - Accept Donation in Any Token: Uniswap/Metamask Integration
@@ -127,3 +135,6 @@ Note: Toggle Contract Status is only available to ME(:)) i.e. I am the admin for
 -- Add target Stable Coin token while creating Cause
 - Upgradability
 - Organization's Dashboard with all the causes
+
+# Demo Link
+// TODO
