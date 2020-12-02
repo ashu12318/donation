@@ -90,7 +90,7 @@ contract("CauseFactory", accounts => {
     it("Disable Cause Factory: Do not allow contract creation operation", async () => {
         //Arrange
         let causeFactoryInstance = await CauseFactory.new({ from: account1 });
-        causeFactoryInstance.ToggleContractStatus({ from: account1 });
+        await causeFactoryInstance.ToggleContractStatus({ from: account1 });
 
         let startTime = Math.floor(Date.now() / 1000) + 100;
         let endTime = Math.floor(Date.now() / 1000) + 2000;
@@ -106,8 +106,8 @@ contract("CauseFactory", accounts => {
     it("Enable Cause Factory", async () => {
         //Arrange
         let causeFactoryInstance = await CauseFactory.new({ from: account1 });
-        causeFactoryInstance.ToggleContractStatus({ from: account1 });
-        causeFactoryInstance.ToggleContractStatus({ from: account1 });
+        await causeFactoryInstance.ToggleContractStatus({ from: account1 });
+        await causeFactoryInstance.ToggleContractStatus({ from: account1 });
 
         let startTime = Math.floor(Date.now() / 1000) + 100;
         let endTime = Math.floor(Date.now() / 1000) + 2000;

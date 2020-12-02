@@ -1,0 +1,1 @@
+A document called deployed_addresses.txt that describes where your contracts live (testnet AND address).
