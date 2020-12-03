@@ -1,8 +1,8 @@
-# Design Patterns
+# Design Patterns  
 
-Following are the Design Patterns used in this Smart Contract Development
+Following are the Design Patterns used in this Smart Contract Development  
 
-## CauseFactory.sol
+## CauseFactory.sol  
 
 1. **Circuit Breaker**  
 Admin can disable/enable the creation of new Causes in exceptional cases using "ToggleContractStatus" method.  
@@ -13,7 +13,7 @@ Only Admin is allowed to Disable/Enable the CauseFactory Contract using "ToggleC
 Rationale: This operation should not be available to everyone since they can mess with it and make the system not-usable  
 
 3. **Factory Pattern**  
-This Contract act as a Factory which allows user to create as many as Cause Contracts for each Cause created by User
+This Contract act as a Factory which allows user to create as many as Cause Contracts for each Cause created by User  
 Rationale: If we maintain all the cause in a single Contract then it will add the overhead of storage, also Cause contracts are not usable after a period. Hence decided to go with individual contract for each cause and maintain only their address at Factory.  
 
 4. **Registry Pattern**  
@@ -21,7 +21,7 @@ This Contract maintains a registry of every Cause created.
 It maintains a map of User's Address and Cause Address created by that user  
 It maintains a map of Cause Address and its Status which can be used for other functionality in future  
 
-## Cause.sol
+## Cause.sol  
 
 1. **Access Restriction**  
 Withdraw Operation is only allowed to the Owner of the Cause i.e. User who created that Cause  
