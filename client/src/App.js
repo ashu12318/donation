@@ -23,7 +23,7 @@ class App extends Component {
       console.log(accounts[0]);
 
       let networkId = await this.getNetworkId(web3);
-      if (networkId != 5777 && networkId != 4) {
+      if (networkId != 5777 && networkId != 4 && networkId != 3) {
         throw "Contract not deployed to network.";
       }
       let causeFactoryInstance = await this.getContractInstance(web3, networkId, CauseFactory);

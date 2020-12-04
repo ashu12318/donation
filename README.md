@@ -110,6 +110,8 @@ You can find the Smart Contract Rinkeby Address in "Donation/deploued_addresses.
         Dapp will show you on top left corner, the network you are currently connected to.  
     5. Start Interacting with Dapp  
 
+Note: Dapp only supports two test networks i.e. rinkeby and ropsten.  
+
 # Technology & Tools
 
 ## Crypto Wallet
