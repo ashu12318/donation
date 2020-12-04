@@ -10,7 +10,8 @@ const mnemonic = fs.readFileSync(".secret").toString().trim();
 
 const mnemonic = process.env.MNEMONIC;
 const infuraKey = process.env.INFURA_KEY;
-const infuraURL = 'https://rinkeby.infura.io/v3/' + infuraKey
+const rinkebyInfuraURL = 'https://rinkeby.infura.io/v3/' + infuraKey
+const ropstenInfuraURL = 'https://ropsten.infura.io/v3/' + infuraKey
 
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
@@ -22,9 +23,15 @@ module.exports = {
     },
     rinkeby: {
       provider: function() {
-        return new HDWalletProvider(mnemonic, infuraURL)
+        return new HDWalletProvider(mnemonic, rinkebyInfuraURL)
       },
       network_id: 4
+    },
+    ropsten: {
+      provider: function() {
+        return new HDWalletProvider(mnemonic, ropstenInfuraURL)
+      },
+      network_id: 3
     }
   }
 };

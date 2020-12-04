@@ -1,1 +1,6 @@
-A document called deployed_addresses.txt that describes where your contracts live (testnet AND address).
+1. Testnet: rinkeby
+CauseFactory Contract: 0x9cf544fEF76b6eDb2214A2a3A2F96aC2e50420ff
+
+2. Testnet: ropsten
+CauseFactory Contract: 0x3DdA7939943CB5ecC3bA4E261BCb24440109ce11
+

@@ -95,21 +95,20 @@ You can find the Smart Contract Rinkeby Address in "Donation/deploued_addresses.
 2. Get some test-network ether from faucet, here is a link for [rinkeby](https://faucet.rinkeby.io/)
 2. Move to root directory i.e. "Donation"
 3. Create a new file ".env"
-4. Declare 2 variables as below
+4. Declare 2 variables as below. Here is the link on how to get your [infura project key](https://blog.infura.io/getting-started-with-infura-28e41844cc89/?&utm_source=infurablog&utm_medium=referral&utm_campaign=tutorials&utm_content=getting_started_eth_api)  
     > INFURA_KEY=paste your infura key here (without quotes)  
-    > MNEMONIC=paste your mnemonic here (without quotes)
+    > MNEMONIC=paste your mnemonic here (without quotes)  
 5. Run following command to deploy contract to network your desired network, here in this case its rinkeby  
     > truffle migrate --reset --network rinkeby  
-6. Running front-end
-    1. Move to "Donation/client" directory
-    2. run the local development server from console/terminal
+6. Running front-end  
+    1. Move to "Donation/client" directory  
+    2. run the local development server from console/terminal  
         > npm install  
         > npm start  
-    3. This should launch the Dapp at "localhost:3000"
-    4. Ensure you are connected to Rinkeby blockchain network i.e. network id 4
-        Dapp will show you on top left corner, the network you are currently connected to.
+    3. This should launch the Dapp at "localhost:3000"  
+    4. Ensure you are connected to Rinkeby blockchain network i.e. network id 4  
+        Dapp will show you on top left corner, the network you are currently connected to.  
     5. Start Interacting with Dapp  
-Note: Toggle Contract Status is only available to ME(:)) i.e. I am the admin for the contract deployed on Rinkeby network. You can also deploy your own version if you want to with additional work.
 
 # Technology & Tools
 
