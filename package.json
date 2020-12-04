@@ -1,0 +1,22 @@
+{
+  "name": "donation",
+  "version": "1.0.0",
+  "description": "Crypt Donation Project.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ashu12318/donation.git"
+  },
+  "author": "Ashutosh Singh Parmar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ashu12318/donation/issues"
+  },
+  "homepage": "https://github.com/ashu12318/donation#readme",
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^1.2.0",
+    "dotenv": "^8.2.0"
+  }
+}

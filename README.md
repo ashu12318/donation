@@ -70,17 +70,19 @@ In adition to the above two softwares you will need following additional setup
 3. Deploying Smart Contract  
     1. Run Ganache: Ensure its running on port 7545
     2. Move to root directory of Project i.e. "Donation"
-    3. [*Optional*] Compile it once to ensure everything is fine
+    3. Install node packages
+        > npm install
+    4. [*Optional*] Compile it once to ensure everything is fine
         > truffle compile
-    4. [*Optional*] Run tests to ensure Smart Contract is behaving as planned
+    5. [*Optional*] Run tests to ensure Smart Contract is behaving as planned
         > tuffle test
-    5. Deploy Smart Contract to Ganache (Reset flag will deploy contracts fresh)
+    6. Deploy Smart Contract to Ganache (Reset flag will deploy contracts fresh)
         > truffle migrate --reset
 4. Running front-end
     1. Move to "Donation/client" directory
     2. run the local development server from console/terminal
-        > npm install
-        > npm start
+        > npm install  
+        > npm start  
     3. This should launch the Dapp at "localhost:3000"
     4. Ensure you are connected to local blockchain network i.e. network id 5777 running at localhost:7545  
         Dapp will show you on top left corner, the network you are currently connected to.
@@ -90,12 +92,19 @@ In adition to the above two softwares you will need following additional setup
 Currently Smart Contracts has been deployed to Rinkeby testnet.  
 You can find the Smart Contract Rinkeby Address in "Donation/deploued_addresses.txt"  
 1. Download the project repo(either as zip or clone it using git)
-2. Running front-end
+2. Get some test-network ether from faucet, here is a link for [rinkeby](https://faucet.rinkeby.io/)
+2. Move to root directory i.e. "Donation"
+3. Create a new file ".env"
+4. Declare 2 variables as below
+    > INFURA_KEY=paste your infura key here (without quotes)  
+    > MNEMONIC=paste your mnemonic here (without quotes)
+5. Run following command to deploy contract to network your desired network, here in this case its rinkeby  
+    > truffle migrate --reset --network rinkeby  
+6. Running front-end
     1. Move to "Donation/client" directory
     2. run the local development server from console/terminal
         > npm install  
-
-        > npm start
+        > npm start  
     3. This should launch the Dapp at "localhost:3000"
     4. Ensure you are connected to Rinkeby blockchain network i.e. network id 4
         Dapp will show you on top left corner, the network you are currently connected to.
