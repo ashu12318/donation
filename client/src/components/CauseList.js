@@ -11,9 +11,16 @@ class CauseList extends Component {
         this.state = { web3: props.web3, account: props.account, causeFactoryContract: props.causeFactoryContract, causeContract: props.causeContract, causeAddresses: [], causes: [], cause: null };
 
         this.handleGetAllCauses = this.handleGetAllCauses.bind(this);
+        this.showDonate = this.showDonate.bind(this);
+        this.withdraw = this.withdraw.bind(this);
+    }
+
+    componentDidMount = async() => {
+        this.loadCauses();
     }
 
     async loadCauses() {
+        console.log("Calling Load Cause....");
         let causeFactoryContract = this.state.causeFactoryContract;
         causeFactoryContract.methods.GetAllCauses().call({ from: this.state.account }, this.handleGetAllCauses);
     }
@@ -119,16 +126,19 @@ class CauseList extends Component {
 
         causeContract.options.address = causeAddress;
         
+        let obj = this;
+
         causeContract.methods.Withdraw().send( {from : account } )
         .on("transactionhash", function(transactionHash) {
             console.log("Withdraw: Transaction Hash");
             console.log(transactionHash);
         })
         .on("receipt", function(receipt) {
-            this.props.refreshUserDetails();
             alert("Withdrawal Done.");
             console.log("Withdraw: Receipt");
             console.log(receipt);
+            obj.props.refreshUserDetails();
+            obj.loadCauses();
         })
         .on("error", function(error, reciept) {
             //TODO: Formatting error message when something went wrong on blockchain
@@ -139,7 +149,6 @@ class CauseList extends Component {
     }
 
     render() {
-        this.loadCauses();
         let causes = this.state.causes;
         let account = this.state.account;
         
@@ -151,7 +160,11 @@ class CauseList extends Component {
         else
         {
             causeDetails = causes.map((cause, index) => {
-                let isOwner = cause.owner.toLowerCase() === account.toLowerCase();
+                let isOwner = false;
+                if(cause.owner) {
+                    isOwner = cause.owner.toLowerCase() === account.toLowerCase();
+                }
+                
                 return(
                     <tr key={ index }>
                         <td>{ cause.title }</td>

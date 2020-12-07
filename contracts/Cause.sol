@@ -98,7 +98,7 @@ contract Cause {
     //Design: Autodeprication of Operation
     modifier canWithdrawFunds() {
         require(EndTime < now, "Withdraw operation not allowed. Cause is still active and accepting donations.");
-        require(!WithdrawalDone, "Withdraw operation not allowed. Funds already withdrawn.");
+        require(WithdrawalDone == false, "Withdraw operation not allowed. Funds already withdrawn.");
         _;
     }
 

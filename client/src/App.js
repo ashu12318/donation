@@ -10,7 +10,7 @@ import UserDetail from "./components/UserDetail"
 import "./App.css";
 
 class App extends Component {
-  state = { web3: null, accounts: null, causeFactoryContract: null, causeContract: null, refresh: {}};
+  state = { web3: null, accounts: null, causeFactoryContract: null, causeContract: null, userBalance: 0, network: "", refresh: {}};
 
   componentDidMount = async () => {
     try {
@@ -28,8 +28,9 @@ class App extends Component {
       }
       let causeFactoryInstance = await this.getContractInstance(web3, networkId, CauseFactory);
       let causeInstance = await this.getContractInstance(web3, networkId, Cause);
-
+      
       this.setState({ web3, accounts, causeFactoryContract: causeFactoryInstance, causeContract: causeInstance });
+      await this.loadUserDetails();
 
       this.toggleContractStatus = this.toggleContractStatus.bind(this);
 
@@ -55,8 +56,25 @@ class App extends Component {
     return contractInstance;
   }
 
+  async loadUserDetails() {
+    console.log("Calling loadUserDetails");
+    let web3 = this.state.web3;
+    let account = this.state.accounts[0];
+    let obj = this;
+    web3.eth.getBalance(account, function(error, balance) {
+        let userBalance = web3.utils.fromWei(balance);
+        obj.setState({ userBalance: userBalance });
+    });
+
+    web3.eth.net.getNetworkType(function (error, name) {
+        if (!error) {
+            obj.setState({ network: name });
+        }
+    });
+  }
+
   async refreshUserDetails() {
-    this.setState({ refresh: {} });
+    await this.loadUserDetails();
   }
 
   async toggleContractStatus() {
@@ -88,8 +106,12 @@ class App extends Component {
           <Button onClick={ () => this.toggleContractStatus() } >Toggle Contract Status</Button>
         </div>
         { /* User Detail Section */ }
-        <div >
-          <UserDetail web3={ this.state.web3 } account={ this.state.accounts[0] } ></UserDetail>
+        <div>
+          <UserDetail
+                      account={ this.state.accounts[0] } 
+                      userBalance={ this.state.userBalance } 
+                      network={ this.state.network } >
+          </UserDetail>
         </div>
 
         { /* Cause Form */ }

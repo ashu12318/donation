@@ -83,6 +83,8 @@ class CauseForm extends Component {
         let endTime = new Date(this.state.endTime).getTime() / 1000;
         let targetAmount = web3.utils.toWei(this.state.targetAmount.toString());
 
+        let obj = this;
+
         causeFactory.methods.CreateCause(this.state.title, this.state.detail, targetAmount, startTime, endTime)
         .send({ from: this.state.account })
         .on("transactionHash", function(transactionHash) {
@@ -94,7 +96,8 @@ class CauseForm extends Component {
             console.log("CreateCause: Receipt");
             console.log(receipt);
             
-            this.props.refreshUserDetails();
+            obj.props.refreshUserDetails();
+            //TODO: Refresh Cause List
         })
         .on("error", function(error, receipt) {
             alert("Something went wrong while creating cause..\n" + error.message);
